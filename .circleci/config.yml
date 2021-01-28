@@ -1,0 +1,37 @@
+version: 2.1
+
+jobs:
+  build:
+    working_directory: ~/circleci-python
+    docker:
+      - image: cimg/python:3.9.1
+    steps:
+      - checkout
+      - run: python3 main.py
+
+  test:
+    working_directory: ~/circleci-python
+    docker:
+      - image: cimg/python:3.9.1
+    steps:
+      - checkout
+      - run: python3 test_main.py
+
+  test_c:
+    docker:
+      - image: cimg/python:3.9.1
+    steps:
+      - checkout
+      - run: | 
+          g++ main.cpp && ./a.out
+      
+
+workflows:
+  build_and_test:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
+      - test_c
+
